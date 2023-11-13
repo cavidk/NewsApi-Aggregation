@@ -19,7 +19,7 @@ class GuardianProvider implements NewsProvider
 
     public function search($query)
     {
-        // TODO: Implement search() method.
+
     }
 
     public function dbSearch($query)
