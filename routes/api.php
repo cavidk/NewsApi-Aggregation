@@ -25,3 +25,8 @@ Route::prefix('news')->group(function (){
     Route::get('db/search', [NewsController::class,'dbSearch']);
 });
 
+Route::prefix('news/Guardian')->group(function (){
+    Route::get('search', [NewsController::class,'search']);
+    Route::get('db/search', [NewsController::class,'dbSearch']);
+});
+
