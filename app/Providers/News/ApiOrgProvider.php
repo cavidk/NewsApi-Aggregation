@@ -40,12 +40,12 @@ class ApiOrgProvider implements NewsProvider
     {
         $from = date('Y-m-d');
         $url = 'https://newsapi.org/v2/everything?q=' . $q . '&from='.$from.'sortBy=popularity&apiKey='.$this->api_key;
-        $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
+//        $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
-            CURLOPT_USERAGENT => $agent,
+//            CURLOPT_USERAGENT => $agent,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

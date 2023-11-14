@@ -23,4 +23,8 @@ class GuardianController extends Controller
             ];
         }
     }
+
+    public function dbSearch(Request $request){
+        //code will goes here
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Providers\News;
 use App\Contacts\NewsProvider;
 use App\Models\GuardianNews;
 use App\Models\News;
+use Carbon\Carbon;
 use Faker\Provider\UserAgent;
 
 class GuardianProvider implements NewsProvider
@@ -38,13 +39,13 @@ class GuardianProvider implements NewsProvider
     {
         $from = date('Y-m-d');
         $url = 'https://content.guardianapis.com/search?q=' . $query . '&from=' . $from . '&api-key=' . $this->api_key;
-        $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
+//        $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
-            CURLOPT_USERAGENT => $agent,
+//            CURLOPT_USERAGENT => $agent,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -57,6 +58,7 @@ class GuardianProvider implements NewsProvider
         curl_close($curl);
 
         $result = json_decode($response, 1);
+
         $this->importSections($result['response']['results']);
 
     }
@@ -71,20 +73,20 @@ class GuardianProvider implements NewsProvider
     }
 
 
-    public function saveArticle($sectionName)
+    public function saveArticle($articles)
     {
 
         try {
             GuardianNews::updateOrCreate([
-                'id' => $sectionName['id'],
-                'type' => $sectionName['type'],
-                'webPublicationDate' => $sectionName['webPublicationDate'],
-                'webTitle' => $sectionName['webTitle'],
-                'webUrl' => $sectionName['webUrl'],
-                'apiUrl' => $sectionName['apiUrl'],
-                'isHosted' => $sectionName['isHosted'],
-                'pillarId' => $sectionName['pillarId'],
-                'pillarName' => $sectionName['pillarName'],
+                'id' => $articles['id'],
+                'type' => $articles['type'],
+                'webPublicationDate' => Carbon::parse($articles['webPublicationDate']),
+                'webTitle' => $articles['webTitle'],
+                'webUrl' => $articles['webUrl'],
+                'apiUrl' => $articles['apiUrl'],
+                'isHosted' => $articles['isHosted'],
+                'pillarId' => $articles['pillarId'],
+                'pillarName' => $articles['pillarName'],
             ]);
         } catch (\Exception $e) {
             return [
