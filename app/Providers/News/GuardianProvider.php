@@ -3,6 +3,7 @@
 namespace App\Providers\News;
 
 use App\Contacts\NewsProvider;
+use App\Http\Resources\NewsResource;
 use App\Models\GuardianNews;
 use App\Models\News;
 use Carbon\Carbon;
@@ -11,7 +12,7 @@ use Faker\Provider\UserAgent;
 class GuardianProvider implements NewsProvider
 {
 
-    private $source = 'newsguardian';
+    private $source = 'guardian';
 
     private $api_key = '023525dc-3298-452c-9cc5-cbebec96ffe5';
 
@@ -30,22 +31,28 @@ class GuardianProvider implements NewsProvider
         return $this->searchRequest($query);
     }
 
-    public function dbSearch($query)
+    public function dbSearch($q)
     {
-        // TODO: Implement dbSearch() method.
+        $result = News::
+            where('source', $this->source)
+            ->where(function($query) use ($q){
+                $query->where('title','LIKE','%'.$q.'%')
+                    ->orWhere('content','LIKE','%'.$q.'%');
+            })->get();
+        return NewsResource::collection($result);
     }
 
     public function searchRequest($query)
     {
         $from = date('Y-m-d');
         $url = 'https://content.guardianapis.com/search?q=' . $query . '&from=' . $from . '&api-key=' . $this->api_key;
-//        $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
+        $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
-//            CURLOPT_USERAGENT => $agent,
+            CURLOPT_USERAGENT => $agent,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -63,30 +70,32 @@ class GuardianProvider implements NewsProvider
 
     }
 
-    public function importSections($sectionName)
+    public function importSections($data)
     {
-        if (isset($sectionName['sectionName']) && count($sectionName['sectionName'])) {
-            foreach ($sectionName['sectionName'] as $section) {
-                $this->saveArticle($section);
-            }
+        foreach ($data as $item) {
+            $this->saveArticle($item);
         }
     }
 
 
-    public function saveArticle($articles)
+    public function saveArticle($article)
     {
 
         try {
-            GuardianNews::updateOrCreate([
-                'id' => $articles['id'],
-                'type' => $articles['type'],
-                'webPublicationDate' => Carbon::parse($articles['webPublicationDate']),
-                'webTitle' => $articles['webTitle'],
-                'webUrl' => $articles['webUrl'],
-                'apiUrl' => $articles['apiUrl'],
-                'isHosted' => $articles['isHosted'],
-                'pillarId' => $articles['pillarId'],
-                'pillarName' => $articles['pillarName'],
+//            $table->string('title');
+//            $table->text('content');
+//            $table->string('source');
+//            $table->text('img_url')->nullable();
+//            $table->dateTime('publishedAt');
+            News::updateOrCreate([
+                'title' => $article['sectionName'],
+                'source' => $this->source
+            ], [
+                'title' => $article['sectionName'],
+                'content' => $article['webTitle'],
+                'source' => $this->source,
+                'img_url' => $article['urlToImage'] ?? '',
+                'publishedAt' => Carbon::parse($article['webPublicationDate']),
             ]);
         } catch (\Exception $e) {
             return [

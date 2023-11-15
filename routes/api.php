@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\GuardianController;
 use App\Http\Controllers\Api\NewsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +25,7 @@ Route::prefix('news')->group(function (){
 });
 
 Route::prefix('news/Guardian')->group(function (){
-    Route::get('search', [GuardianController::class,'search']);
-    Route::get('db/search', [GuardianController::class,'dbSearch']);
+    Route::get('search', [NewsController::class,'search']);
+    Route::get('db/search', [NewsController::class,'dbSearch']);
 });
 
