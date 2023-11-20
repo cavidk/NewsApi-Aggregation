@@ -4,22 +4,29 @@ namespace App\Providers\News;
 
 use App\Contacts\NewsProvider;
 use App\Http\Resources\NewsResource;
-use App\Models\GuardianNews;
 use App\Models\News;
 use Carbon\Carbon;
-use Faker\Provider\UserAgent;
+
 
 class GuardianProvider implements NewsProvider
 {
 
     private $source = 'guardian';
 
-    private $api_key = '023525dc-3298-452c-9cc5-cbebec96ffe5';
+    protected $api_key;
+
+    /**
+     * @param $api_key
+     */
+    public function __construct($api_key)
+    {
+        $this->api_key = env('GUARDIAN_API_KEY');
+    }
 
 
     public function fetchNews()
     {
-        return GuardianNews::where('source', $this->source)
+        return News::where('source', $this->source)
             ->get();
     }
 
@@ -82,15 +89,11 @@ class GuardianProvider implements NewsProvider
     {
 
         try {
-//            $table->string('title');
-//            $table->text('content');
-//            $table->string('source');
-//            $table->text('img_url')->nullable();
-//            $table->dateTime('publishedAt');
             News::updateOrCreate([
                 'title' => $article['sectionName'],
                 'source' => $this->source
-            ], [
+            ],
+            [
                 'title' => $article['sectionName'],
                 'content' => $article['webTitle'],
                 'source' => $this->source,

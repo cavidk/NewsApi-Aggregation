@@ -11,7 +11,15 @@ class ApiOrgProvider implements NewsProvider
 {
 
     private $source = 'newsapiorg';
-    private $api_key = '6d24c2d2b72f445da028314bbbe09d28';
+    protected $api_key;
+
+    /**
+     * @param $api_key
+     */
+    public function __construct($api_key)
+    {
+        $this->api_key = env('API_ORG_PROVIDER_API_KEY');
+    }
 
     public function fetchNews()
     {

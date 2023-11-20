@@ -24,7 +24,6 @@ class NewsController extends Controller
                 'message' => 'Source not found',
             ];
         }
-
     }
     public function dbSearch(Request $request){
         $q = $request->get('q');
@@ -41,6 +40,5 @@ class NewsController extends Controller
                 'message' => 'Source not found',
             ];
         }
-
     }
 }
