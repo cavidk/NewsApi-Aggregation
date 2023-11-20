@@ -3,6 +3,8 @@
 namespace App\Providers\News;
 
 use App\Contacts\NewYorkTimesInterface;
+use App\Models\News;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class NewYorkTimesProvider implements NewYorkTimesInterface
@@ -61,11 +63,38 @@ class NewYorkTimesProvider implements NewYorkTimesInterface
 
         $response = curl_exec($curl);
         curl_close($curl);
-        echo $response;
+        $result = json_decode($response,1);
+
+        $this->importNews($result);
+        return $this->dbSearch($query);
     }
 
-    public function saveArticle($articles)
+    public function importNews($category)
     {
-        // TODO: Implement saveArticle() method.
+        $articles = $this->fetchNews($category);
+        foreach ($articles as $article) {
+            $this->saveArticle($article);
+        }
+    }
+
+    public function saveArticle($article)
+    {
+        try {
+            News::updateOrCreate([
+                'title' => $article['title'],
+                'source' => $this->source
+            ], [
+                'title' => $article['title'],
+                'content' => $article['content'],
+                'source' => $this->source,
+                'img_url' => $article['urlToImage'],
+                'publishedAt' => Carbon::parse($article['publishedAt']),
+            ]);
+        } catch (\Exception $e){
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }

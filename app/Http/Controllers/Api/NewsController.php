@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Providers\News\ApiOrgProvider;
 use App\Providers\News\GuardianProvider;
+use App\Providers\News\NewYorkTimesProvider;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -17,6 +18,7 @@ class NewsController extends Controller
             return match ($source){
                 'newsapiorg' => (new ApiOrgProvider())->search($q),
                 'guardian' => (new GuardianProvider())->search($q),
+                'new_york_times' => (new NewYorkTimesProvider())->search($q),
             };
         }catch (\UnhandledMatchError $e){
             return [
@@ -33,6 +35,7 @@ class NewsController extends Controller
             return match ($source){
                 'newsapiorg' => (new ApiOrgProvider())->dbSearch($q),
                 'guardian' => (new GuardianProvider())->dbSearch($q),
+//                'new_york_times' => (new NewYorkTimesProvider())->dbSearch($q),
             };
         }catch (\UnhandledMatchError $e){
             return [
