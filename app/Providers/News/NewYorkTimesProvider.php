@@ -51,8 +51,10 @@ class NewYorkTimesProvider implements NewYorkTimesInterface
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=hE0mu2PAb0BPqSm9oyKn3GHPMziPk3Ww',
+//            CURLOPT_URL => 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=hE0mu2PAb0BPqSm9oyKn3GHPMziPk3Ww',
+            CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_USERAGENT => $agent,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 0,
