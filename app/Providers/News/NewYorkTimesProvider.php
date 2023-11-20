@@ -31,7 +31,7 @@ class NewYorkTimesProvider implements NewYorkTimesInterface
 
     public function search($query)
     {
-        if(!$query){
+        if (!$query) {
             return $this->fetchNews();
         }
         return $this->searchRequest($query);
@@ -45,7 +45,7 @@ class NewYorkTimesProvider implements NewYorkTimesInterface
     public function searchRequest($query)
     {
         $from = date('Y-m-d');
-        $url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q' . $query . '&from='.$from.'sortBy=popularity&apiKey='.$this->apiKey;
+        $url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q' . $query . '&from=' . $from . 'sortBy=popularity&apiKey=' . $this->apiKey;
         $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
 
         $curl = curl_init();
@@ -65,7 +65,7 @@ class NewYorkTimesProvider implements NewYorkTimesInterface
 
         $response = curl_exec($curl);
         curl_close($curl);
-        $result = json_decode($response,1);
+        $result = json_decode($response, 1);
 
         $this->importNews($result);
         return $this->dbSearch($query);
@@ -92,7 +92,7 @@ class NewYorkTimesProvider implements NewYorkTimesInterface
                 'img_url' => $article['urlToImage'],
                 'publishedAt' => Carbon::parse($article['publishedAt']),
             ]);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return [
                 'status' => 'error',
                 'message' => $e->getMessage()
