@@ -33,9 +33,9 @@
    including news publications, blogs, and magazines. It allows developers to retrieve
    articles based on keywords, categories, and sources.<br>
    <h2>Challenge Guidelines</h2><br>
-1. The output expected from this challenge is a Backend project using PHP Laravel.
+1. The output expected from this challenge is a Backend project using PHP Laravel.<br>
 2. Implement data fetching and storage mechanisms for the selected data sources.
-   Ensure that the data is regularly updated from the live data sources.
+   Ensure that the data is regularly updated from the live data sources.<br>
 3. Create API endpoints that allow the frontend application to interact with the backend
    and retrieve articles based on search queries, filtering criteria, and user
    preferences.<br>
